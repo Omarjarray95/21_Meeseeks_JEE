@@ -24,7 +24,7 @@ import interfaces.MondatServiceRemote;
  */
 @Stateless
 @LocalBean
-public class MondatService implements MondatServiceRemote, MondatServiceLocal {
+public class MandatService implements MondatServiceRemote, MondatServiceLocal {
 
     /**
      * Default constructor. 
@@ -32,7 +32,7 @@ public class MondatService implements MondatServiceRemote, MondatServiceLocal {
 	@PersistenceContext
 	private EntityManager entityManager;
 	
-    public MondatService() {
+    public MandatService() {
    
     }
  
@@ -51,13 +51,6 @@ public class MondatService implements MondatServiceRemote, MondatServiceLocal {
 
 	@Override
 	public void addTerm(Term term) {
-		
-		
-		
-		
-		
-		
-		
 		
 	}
 

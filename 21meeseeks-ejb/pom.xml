@@ -7,15 +7,16 @@
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
 	<artifactId>21meeseeks-ejb</artifactId>
+	
+
+
 	<packaging>ejb</packaging>
-
-
-
-	<properties>
+		<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.compiler.target>1.8</maven.compiler.target>
 		<maven.compiler.source>1.8</maven.compiler.source>
 	</properties>
+
 
 	<dependencies>
 		<dependency>
@@ -24,18 +25,17 @@
 			<version>7.0</version>
 			<scope>provided</scope>
 		</dependency>
-		
 	</dependencies>
 
 	<build>
+		<finalName>${project.artifactId}</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-ejb-plugin</artifactId>
-				<version>2.5</version>
+				<version>${version.ejb.plugin}</version>
 				<configuration>
 					<ejbVersion>3.2</ejbVersion>
-					<jarName>${project.artifactId}</jarName>
 				</configuration>
 			</plugin>
 		</plugins>

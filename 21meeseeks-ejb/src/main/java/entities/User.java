@@ -123,4 +123,8 @@ public class User implements Serializable {
 				+ ", passwordLastChanged=" + passwordLastChanged + "]";
 	}
 
+	
+
+
+
 }
