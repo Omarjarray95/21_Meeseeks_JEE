@@ -2,8 +2,10 @@ package entities;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -14,10 +16,9 @@ public class Competence  implements Serializable{
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int idCompetence;
-	
-	private String Label;
-	@OneToMany
-	private List<Level> levels;
+	private String label;
+	@OneToMany(fetch=FetchType.EAGER)
+	private Set<Level> levels;
 	@ManyToMany(mappedBy="competences")
 	private List<ProjectRequest> projectRequests;
 	
@@ -29,10 +30,11 @@ public class Competence  implements Serializable{
 	public void setProjectRequests(List<ProjectRequest> projectRequests) {
 		this.projectRequests = projectRequests;
 	}
-	public List<Level> getLevels() {
+	
+	public Set<Level> getLevels() {
 		return levels;
 	}
-	public void setLevels(List<Level> levels) {
+	public void setLevels(Set<Level> levels) {
 		this.levels = levels;
 	}
 	public int getIdCompetence() {
@@ -42,11 +44,12 @@ public class Competence  implements Serializable{
 		this.idCompetence = idCompetence;
 	}
 	public String getLabel() {
-		return Label;
+		return label;
 	}
 	public void setLabel(String label) {
-		Label = label;
+		this.label = label;
 	}
+	
 	
 	
 	

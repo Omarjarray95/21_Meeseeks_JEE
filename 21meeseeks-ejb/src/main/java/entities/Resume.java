@@ -3,45 +3,33 @@ package entities;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
-import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.ws.rs.ext.ParamConverter.Lazy;
 
 @Entity
 public class Resume implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int idResume;
-	
 	@OneToOne(mappedBy = "resume")
 	private Resource resource;
-	
 	private String description;
-	
-	@ManyToMany
-	private List<Certificate> certificates;
-	
-	@OneToMany(mappedBy = "resume", cascade= CascadeType.PERSIST)
-	private List<Degree> listDegree = new ArrayList<>();
-	
-	@OneToMany(mappedBy = "resume", cascade= CascadeType.PERSIST)
-	private List<JobDate> listJob = new ArrayList<>();
-	
-	public void addDegree(Degree degree){
-		degree.setResume(this);
-		this.listDegree.add(degree);
-	}
-	
-	public void addJob(JobDate jd){
-		jd.setResume(this);
-		this.listJob.add(jd);
-	}
+	@ManyToMany(fetch=FetchType.EAGER)
+	private Set<Establishment> etablissement;
+	@ManyToMany(fetch=FetchType.EAGER)
+	private Set<Society> society;
+	@ManyToMany(fetch=FetchType.EAGER)
+	private Set<Certificate> certificates;
+	@ManyToMany(fetch=FetchType.EAGER)
+	private Set<Competence> competence;
 
 	public int getIdResume() {
 		return idResume;
@@ -67,28 +55,41 @@ public class Resume implements Serializable {
 		this.description = description;
 	}
 
-	public List<Certificate> getCertificates() {
+	
+
+	public Set<Establishment> getEtablissement() {
+		return etablissement;
+	}
+
+	public void setEtablissement(Set<Establishment> etablissement) {
+		this.etablissement = etablissement;
+	}
+
+	public Set<Society> getSociety() {
+		return society;
+	}
+
+	public void setSociety(Set<Society> society) {
+		this.society = society;
+	}
+
+	public Set<Certificate> getCertificates() {
 		return certificates;
 	}
 
-	public void setCertificates(List<Certificate> certificates) {
+	public void setCertificates(Set<Certificate> certificates) {
 		this.certificates = certificates;
 	}
 
-	public List<Degree> getListDegree() {
-		return listDegree;
+	public Set<Competence> getCompetence() {
+		return competence;
 	}
 
-	public void setListDegree(List<Degree> listDegree) {
-		this.listDegree = listDegree;
+	public void setCompetence(Set<Competence> competence) {
+		this.competence = competence;
 	}
 
-	public List<JobDate> getListJob() {
-		return listJob;
-	}
+	
 
-	public void setListJob(List<JobDate> listJob) {
-		this.listJob = listJob;
-	}
-
+	
 }

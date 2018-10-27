@@ -25,6 +25,7 @@ public class User implements Serializable {
 	private String password;
 	private String address;
 	private String phoneNumber;
+	private String token;
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date lastAuthentificated;
 	@Temporal(TemporalType.TIMESTAMP)
@@ -86,6 +87,15 @@ public class User implements Serializable {
 
 	public void setPasswordLastChanged(Date passwordLastChanged) {
 		this.passwordLastChanged = passwordLastChanged;
+	}
+	
+
+	public String getToken() {
+		return token;
+	}
+
+	public void setToken(String token) {
+		this.token = token;
 	}
 
 	@Override

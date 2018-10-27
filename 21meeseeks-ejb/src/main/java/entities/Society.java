@@ -1,13 +1,17 @@
 package entities;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.ManyToMany;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 @Entity
 public class Society implements Serializable {
@@ -16,9 +20,11 @@ public class Society implements Serializable {
 	private int idSociety;
 	private String name;
 	private String description;
-	@OneToMany(mappedBy = "society")
-	private List<JobDate> listJob;
-
+	@Temporal(TemporalType.DATE)
+	private Date startDate;
+	@Temporal(TemporalType.DATE)
+	private Date endDate;
+	
 	public int getIdSociety() {
 		return idSociety;
 	}
@@ -43,13 +49,21 @@ public class Society implements Serializable {
 		this.description = description;
 	}
 
-	public List<JobDate> getListJob() {
-		return listJob;
+	public Date getStartDate() {
+		return startDate;
 	}
 
-	public void setListJob(List<JobDate> listJob) {
-		this.listJob = listJob;
+	public void setStartDate(Date startDate) {
+		this.startDate = startDate;
 	}
-	
+
+	public Date getEndDate() {
+		return endDate;
+	}
+
+	public void setEndDate(Date endDate) {
+		this.endDate = endDate;
+	}
+
 
 }

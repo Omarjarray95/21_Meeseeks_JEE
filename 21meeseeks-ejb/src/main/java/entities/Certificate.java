@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.List;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -15,9 +16,7 @@ public class Certificate implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int idCertificate;
 	private String descriptionCertificate;
-	@ManyToMany(mappedBy = "certificates")
-	private List<Resume> resume;
-
+	
 	public int getIdCertificate() {
 		return idCertificate;
 	}
@@ -29,9 +28,11 @@ public class Certificate implements Serializable {
 	public String getDescriptionCertificate() {
 		return descriptionCertificate;
 	}
+	
 
 	public void setDescriptionCertificate(String descriptionCertificate) {
 		this.descriptionCertificate = descriptionCertificate;
 	}
 
+	
 }

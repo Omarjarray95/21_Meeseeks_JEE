@@ -1,15 +1,17 @@
 package entities;
 
 import java.io.Serializable;
-import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.ManyToMany;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 @Entity
 public class Establishment implements Serializable {
@@ -17,14 +19,12 @@ public class Establishment implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int idEstablishment;
 	private String nameEstablishment;
-	
-	@OneToMany(mappedBy = "establishment", cascade= CascadeType.PERSIST)
-	private List<Degree> degreeList = new ArrayList<>();
-	
-	public void addDegree(Degree dg){
-		dg.setEstablishment(this);
-		this.degreeList.add(dg);
-	}
+	@Temporal(TemporalType.DATE)
+	private Date startDate;
+	@Temporal(TemporalType.DATE)
+	private Date endDate;
+	private String diplome;
+	private String description;
 
 	public int getIdEstablishment() {
 		return idEstablishment;
@@ -42,13 +42,37 @@ public class Establishment implements Serializable {
 		this.nameEstablishment = nameEstablishment;
 	}
 
-	public List<Degree> getDegreeList() {
-		return degreeList;
+	public Date getStartDate() {
+		return startDate;
 	}
 
-	public void setDegreeList(List<Degree> degreeList) {
-		this.degreeList = degreeList;
+	public void setStartDate(Date startDate) {
+		this.startDate = startDate;
 	}
 
-	
+	public Date getEndDate() {
+		return endDate;
+	}
+
+	public void setEndDate(Date endDate) {
+		this.endDate = endDate;
+	}
+
+	public String getDiplome() {
+		return diplome;
+	}
+
+	public void setDiplome(String diplome) {
+		this.diplome = diplome;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+
 }

@@ -16,6 +16,20 @@ public class Seniority implements Serializable {
 	private String name;
 	private int yearsOfExperience;
 	private String description;
+	
+	
+
+	public Seniority() {
+		
+	}
+
+	public Seniority(String name, int yearsOfExperience, String description) {
+		super();
+		
+		this.name = name;
+		this.yearsOfExperience = yearsOfExperience;
+		this.description = description;
+	}
 
 	public int getIdSeniority() {
 		return idSeniority;
