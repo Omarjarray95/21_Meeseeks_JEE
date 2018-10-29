@@ -1,7 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <persistence version="2.1" xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
 	<persistence-unit name="21meeseeks-ejb">
-		<jta-data-source>java:/mapDS</jta-data-source>
+		<jta-data-source>java:/MapDS</jta-data-source>
+		<class>entities.Admin</class>
+		<class>entities.Certificate</class>
+		<class>entities.Client</class>
+		<class>entities.ClientCategory</class>
+		<class>entities.ClientType</class>
+		<class>entities.Competence</class>
+		<class>entities.Conversation</class>
+		<class>entities.DayOff</class>
+		<class>entities.Degree</class>
+		<class>entities.DegreePK</class>
+		<class>entities.Establishment</class>
+		<class>entities.Field</class>
+		<class>entities.Holidays</class>
+		<class>entities.JobDate</class>
+		<class>entities.JobDatePK</class>
+		<class>entities.LeaveRequest</class>
+		<class>entities.LeaveType</class>
+		<class>entities.Level</class>
+		<class>entities.Message</class>
+		<class>entities.Note</class>
+		<class>entities.Organigram</class>
+		<class>entities.PkLevel</class>
+		<class>entities.PkTerm</class>
+		<class>entities.Project</class>
+		<class>entities.ProjectRequest</class>
+		<class>entities.Resource</class>
+		<class>entities.Resume</class>
+		<class>entities.Seniority</class>
+		<class>entities.Society</class>
+		<class>entities.Term</class>
+		<class>entities.TermArchive</class>
+		<class>entities.User</class>
 		<properties>
 		<property name="hibernate.show_sql" value="true" />
 			<property name="hibernate.hbm2ddl.auto" value="update"/>

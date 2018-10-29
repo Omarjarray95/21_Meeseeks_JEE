@@ -20,6 +20,7 @@ public class Message implements Serializable{
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int idMessage;
 	
+	
 	@ManyToOne
 	private User sender;
 	

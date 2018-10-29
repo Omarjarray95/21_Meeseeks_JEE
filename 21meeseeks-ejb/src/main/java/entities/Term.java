@@ -26,6 +26,7 @@ public class Term implements Serializable{
 	private String description;
 	private int numberofDaysTerm;
 	
+	private boolean archived;
 
 	@ManyToOne
 	@JoinColumn(name="idResource",referencedColumnName="idUser",insertable=false,updatable=false)
@@ -92,5 +93,13 @@ public class Term implements Serializable{
 	public void setNumberofDaysTerm(int numberofDaysTerm) {
 		this.numberofDaysTerm = numberofDaysTerm;
 	}
+	public boolean isArchived() {
+		return archived;
+	}
+	public void setArchived(boolean archived) {
+		this.archived = archived;
+	}
+	
+	
 	
 }

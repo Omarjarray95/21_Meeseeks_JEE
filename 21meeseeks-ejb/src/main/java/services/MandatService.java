@@ -1,113 +1,186 @@
 package services;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.EnumSet;
 import java.util.List;
 
-import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.PersistenceContext;
 
 import entities.Competence;
+import entities.DayOff;
 import entities.Resource;
 import entities.Term;
 import enums.Availability;
-import interfaces.MondatServiceLocal;
-import interfaces.MondatServiceRemote;
+import interfaces.MandatServiceLocal;
+import interfaces.MandatServiceRemote;
 
 /**
  * Session Bean implementation class MondatService
  */
 @Stateless
-@LocalBean
-public class MandatService implements MondatServiceRemote, MondatServiceLocal {
+public class MandatService implements MandatServiceRemote, MandatServiceLocal {
 
-    /**
-     * Default constructor. 
-     */
+	/**
+	 * Default constructor.
+	 */
 	@PersistenceContext
 	private EntityManager entityManager;
-	
-    public MandatService() {
-   
-    }
- 
-    @Override
-   public List<Resource> findResourceByCompetenceAndAvailability(Competence competence, 	EnumSet<Availability> availables){
-	  List<Resource> list= entityManager.createQuery("select r from Resource r inner join r.levels l where l.competences =:compt "
-	  		+ "and r.availability in :available ")
-			  .setParameter("available", availables)
-			  .setParameter("compt", competence)
-			 .getResultList();
-			  
 
-	return list;
-	   
-   }
+	public MandatService() {
+
+	}
+
+	@Override
+	public List<Resource> findResourceByCompetenceAndAvailability(Competence competence,
+			EnumSet<Availability> availables) {
+		List<Resource> list = entityManager
+				.createQuery("select r from Resource r inner join r.levels l where l.competences =:compt "
+						+ "and r.availability in :available ")
+				.setParameter("available", availables).setParameter("compt", competence).getResultList();
+
+		return list;
+
+	}
+
+	@Override
+	public List<DayOff> listDayOff(Resource resource, Term term) {
+		List<DayOff> listDayOff = entityManager
+				.createQuery("select d.startDate from  Resource as r inner join  DayOff as d on r.idUser=d.idUser "
+						+ " inner join  Term as t on r.idUser=t.idUser where d.startDate.between(t.dateStart,t.dateEnd)")
+				.getResultList();
+
+		return listDayOff;
+
+	}
 
 	@Override
 	public void addTerm(Term term) {
-		
+		entityManager.persist(term);
+
+	}
+
+	public int getWorkingDaysBetweenTwoDates(Date startDate, Date endDate) {
+		Calendar startCal = Calendar.getInstance();
+		startCal.setTime(startDate);
+
+		Calendar endCal = Calendar.getInstance();
+		endCal.setTime(endDate);
+
+		int workDays = 0;
+
+		// Return 0 if start and end are the same
+		if (startCal.getTimeInMillis() == endCal.getTimeInMillis()) {
+			return 0;
+		}
+
+		if (startCal.getTimeInMillis() > endCal.getTimeInMillis()) {
+			startCal.setTime(endDate);
+			endCal.setTime(startDate);
+		}
+
+		do {
+			// excluding start date
+			startCal.add(Calendar.DAY_OF_MONTH, 1);
+			if (startCal.get(Calendar.DAY_OF_WEEK) != Calendar.SATURDAY
+					&& startCal.get(Calendar.DAY_OF_WEEK) != Calendar.SUNDAY) {
+				++workDays;
+			}
+		} while (startCal.getTimeInMillis() < endCal.getTimeInMillis()); // excluding
+																			// end
+																			// date
+
+		return workDays;
 	}
 
 	@Override
 	public Date calculateEndDateTerm(Term term) {
-
-		
+		int totalDays = 0;
 		Calendar cal = Calendar.getInstance();
+
 		cal.setTime(term.getDateStart());
+		cal.add(Calendar.DAY_OF_MONTH, -1);
+		Date dateDebut = cal.getTime();
+
+		cal.setTime(dateDebut);
 		cal.add(Calendar.DAY_OF_MONTH, term.getNumberofDaysTerm());
-		Date dateFin= cal.getTime();
-		int days = getWorkingDaysBetweenTwoDates(term.getDateStart(),dateFin);
-			cal.add(Calendar.DAY_OF_MONTH, days);
-		days= getWorkingDaysBetweenTwoDates(dateFin, cal.getTime());
-		
-		
-		int rest =0;
-		
-		do{
-			
-		}while(rest ==0);
-		
-		
-		return null;
+		Date dateFin = cal.getTime();
+
+		System.out.println("********first*******");
+		System.out.println("debut=" + dateDebut);
+		System.out.println("fin=" + dateFin);
+
+		dateFin = calculDayWork(dateDebut, dateFin, term.getNumberofDaysTerm());
+
+		List<DayOff> listDayOff = entityManager
+				.createQuery("select d from    DayOff  d inner join d.resource r  "
+						+ " where d.startDate between  :dateStart and :dateEnd and d.resource=:resource")
+				.setParameter("dateStart", term.getDateStart()).setParameter("dateEnd", dateFin)
+				.setParameter("resource", term.getResources()).getResultList();
+
+		if (!listDayOff.isEmpty()) {
+			System.out.println("**********************congé*************");
+			for (DayOff d : listDayOff) {
+				if (d.getEndDate().before(dateFin)) {
+
+					LocalDate start = d.getStartDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+					LocalDate end = d.getEndDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+					long days = ChronoUnit.DAYS.between(start, end);
+					System.out.println("****days**"+days);
+					cal.setTime(dateFin);
+					cal.add(Calendar.DAY_OF_MONTH, Math.toIntExact(days));
+				
+					dateFin = calculDayWork(dateFin, cal.getTime(),Math.toIntExact(days));
+					
+				}
+				else {
+					LocalDate startD = d.getStartDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+					LocalDate fin = dateFin.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+					long days = ChronoUnit.DAYS.between(startD, fin);
+					cal.setTime(d.getEndDate());
+					cal.add(Calendar.DAY_OF_MONTH, Math.toIntExact(days));
+					
+					dateFin = calculDayWork(dateFin, cal.getTime(), Math.toIntExact(days));
+					
+					
+				}
+			}
+
+		}
+
+		return dateFin;
 	}
-    
-	
-	
-	public  int getWorkingDaysBetweenTwoDates(Date startDate, Date endDate) {
-	    Calendar startCal = Calendar.getInstance();
-	    startCal.setTime(startDate);        
 
-	    Calendar endCal = Calendar.getInstance();
-	    endCal.setTime(endDate);
+	private Date calculDayWork(Date dateDebut, Date dateFin, int numberOfDays) {
+		Calendar cal = Calendar.getInstance();
+		while (numberOfDays != 0) {
 
-	    int workDays = 0;
+			int days = getWorkingDaysBetweenTwoDates(dateDebut, dateFin);
 
-	    //Return 0 if start and end are the same
-	    if (startCal.getTimeInMillis() == endCal.getTimeInMillis()) {
-	        return 0;
-	    }
+			dateDebut = dateFin;
 
-	    if (startCal.getTimeInMillis() > endCal.getTimeInMillis()) {
-	        startCal.setTime(endDate);
-	        endCal.setTime(startDate);
-	    }
+			cal.setTime(dateFin);
+			int rest = numberOfDays - days;
+			cal.add(Calendar.DAY_OF_MONTH, rest);
+			dateFin = cal.getTime();
 
-	    do {
-	       //excluding start date
-	        startCal.add(Calendar.DAY_OF_MONTH, 1);
-	        if (startCal.get(Calendar.DAY_OF_WEEK) != Calendar.SATURDAY && startCal.get(Calendar.DAY_OF_WEEK) != Calendar.SUNDAY) {
-	            ++workDays;
-	        }
-	    } while (startCal.getTimeInMillis() < endCal.getTimeInMillis()); //excluding end date
+			// totalDays += days - rest;
 
-	    return workDays;
+			numberOfDays -= days;
+			System.out.println("***************");
+			System.out.println("debut=" + dateDebut);
+			System.out.println("fin=" + dateFin);
+			System.out.println("rest=" + rest);
+			System.out.println("days=" + days);
+			// System.out.println("total days=" + totalDays);
+
+		}
+		return dateFin;
+
 	}
- 
-
 }
