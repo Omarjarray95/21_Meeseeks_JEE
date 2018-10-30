@@ -26,9 +26,9 @@ public class User implements Serializable {
 	private String address;
 	private String phoneNumber;
 	private String token;
-	@Temporal(TemporalType.TIMESTAMP)
+	@Temporal(TemporalType.DATE)
 	private Date lastAuthentificated;
-	@Temporal(TemporalType.TIMESTAMP)
+	@Temporal(TemporalType.DATE)
 	private Date passwordLastChanged;
 
 	

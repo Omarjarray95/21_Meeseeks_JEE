@@ -1,10 +1,10 @@
 package entities;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -12,24 +12,30 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
-import javax.ws.rs.ext.ParamConverter.Lazy;
 
 @Entity
 public class Resume implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int idResume;
-	@OneToOne(mappedBy = "resume")
-	private Resource resource;
+
 	private String description;
-	@ManyToMany(fetch=FetchType.EAGER)
-	private Set<Establishment> etablissement;
-	@ManyToMany(fetch=FetchType.EAGER)
-	private Set<Society> society;
-	@ManyToMany(fetch=FetchType.EAGER)
-	private Set<Certificate> certificates;
-	@ManyToMany(fetch=FetchType.EAGER)
-	private Set<Competence> competence;
+
+	@ManyToMany(fetch = FetchType.EAGER)
+	private Set<Establishment> etablissement = new HashSet<Establishment>();
+
+	@ManyToMany(fetch = FetchType.EAGER)
+	private Set<Society> society = new HashSet<Society>();
+
+	@ManyToMany(fetch = FetchType.EAGER)
+	private Set<Certificate> certificates = new HashSet<Certificate>();
+
+	@ManyToMany(fetch = FetchType.EAGER)
+	private Set<Competence> competence = new HashSet<Competence>();
+
+	public Resume() {
+
+	}
 
 	public int getIdResume() {
 		return idResume;
@@ -39,14 +45,6 @@ public class Resume implements Serializable {
 		this.idResume = idResume;
 	}
 
-	public Resource getResource() {
-		return resource;
-	}
-
-	public void setResource(Resource resource) {
-		this.resource = resource;
-	}
-
 	public String getDescription() {
 		return description;
 	}
@@ -54,8 +52,6 @@ public class Resume implements Serializable {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-
-	
 
 	public Set<Establishment> getEtablissement() {
 		return etablissement;
@@ -89,7 +85,26 @@ public class Resume implements Serializable {
 		this.competence = competence;
 	}
 
-	
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + idResume;
+		return result;
+	}
 
-	
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Resume other = (Resume) obj;
+		if (idResume != other.idResume)
+			return false;
+		return true;
+	}
+
 }

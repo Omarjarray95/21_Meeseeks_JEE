@@ -1,5 +1,6 @@
 package services;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.ejb.LocalBean;
@@ -9,10 +10,12 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
 import entities.DayOff;
+import entities.Establishment;
 import entities.LeaveType;
+import entities.Resource;
 import interfaces.DayOffServieLocal;
 import interfaces.DayOffServieRemote;
-
+import interfaces.LeaveTypeServiceLocal;
 /**
  * Session Bean implementation class DayOffServie
  */
@@ -32,8 +35,14 @@ public class DayOffServie implements DayOffServieRemote, DayOffServieLocal {
 
 	@Override
 	public int addDayOff(DayOff d) {
+		int id=d.getLeaveType().getIdLeaveType();
+		LeaveType lt=em.find(LeaveType.class, id);
+		d.setLeaveType(lt);
+		System.out.println(d);
 		em.persist(d);
+		
 		return d.getIdLeave();
+		
 	}
 
 	@Override
@@ -62,6 +71,7 @@ public class DayOffServie implements DayOffServieRemote, DayOffServieLocal {
 		TypedQuery<DayOff> q = em.createQuery("SELECT d FROM DayOff d", DayOff.class);
 		List<DayOff> listDayOff = q.getResultList();
 		return listDayOff;
+		
 	}
 
 }

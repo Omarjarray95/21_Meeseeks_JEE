@@ -2,16 +2,15 @@ package entities;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.List;
 
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 @Entity
 public class Establishment implements Serializable {
@@ -19,12 +18,20 @@ public class Establishment implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int idEstablishment;
 	private String nameEstablishment;
+	@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd")
 	@Temporal(TemporalType.DATE)
 	private Date startDate;
+	@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd")
 	@Temporal(TemporalType.DATE)
 	private Date endDate;
 	private String diplome;
 	private String description;
+	
+	
+
+	public Establishment() {
+		
+	}
 
 	public int getIdEstablishment() {
 		return idEstablishment;
@@ -73,6 +80,45 @@ public class Establishment implements Serializable {
 	public void setDescription(String description) {
 		this.description = description;
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + idEstablishment;
+		result = prime * result + ((nameEstablishment == null) ? 0 : nameEstablishment.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Establishment other = (Establishment) obj;
+		if (idEstablishment != other.idEstablishment)
+			return false;
+		if (nameEstablishment == null) {
+			if (other.nameEstablishment != null)
+				return false;
+		} else if (!nameEstablishment.equals(other.nameEstablishment))
+			return false;
+		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "Establishment [idEstablishment=" + idEstablishment + ", nameEstablishment=" + nameEstablishment
+				+ ", startDate=" + startDate + ", endDate=" + endDate + ", diplome=" + diplome + ", description="
+				+ description + "]";
+	}
+	
+	
+	
+	
 
 
 }

@@ -13,5 +13,6 @@ public interface ResumeServiceLocal {
 	public Boolean deleteResume(int id);
 	public void updateResume(Resume r);
 	public List<Resume> getAllResume();
+	public int lastIndex();
 
 }

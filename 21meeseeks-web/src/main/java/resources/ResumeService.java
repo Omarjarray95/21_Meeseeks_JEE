@@ -69,5 +69,12 @@ public class ResumeService {
 		return Response.status(Status.OK).entity("update successful").build();
 
 	}
+	
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path("index")
+	public Response getLastIndex(){
+		return Response.ok(rs.lastIndex()).build();
+	}
 
 }

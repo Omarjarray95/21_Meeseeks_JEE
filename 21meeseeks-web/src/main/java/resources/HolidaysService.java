@@ -17,54 +17,55 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
-import entities.DayOff;
-import interfaces.DayOffServieLocal;
+import entities.Holidays;
+import interfaces.HolidaysServiceLocal;
 
-@Path("dayOff")
+@Path("holidays")
 @RequestScoped
-public class DayOffServie {
+public class HolidaysService {
 	@EJB
-	DayOffServieLocal df;
+	HolidaysServiceLocal hs;
 
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response addDayOff(DayOff d) {
-		if (d != null) {
-			int i = df.addDayOff(d);
+	public Response addHolidays(Holidays h) {
+		if (h != null) {
+			int i = hs.addHolidays(h);
 		}
+
 		return Response.status(Status.CREATED).entity("ok").build();
 	}
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getAllDayOff() {
-		List<DayOff> list = new ArrayList<>();
-		list = df.getAllDayOff();
-		return Response.status(Status.FOUND).entity(list).build();
+	public Response getAllHolidays() {
+		List<Holidays> list = new ArrayList<>();
+		list = hs.getAllHolidays();
+		return Response.status(Status.CREATED).entity(list).build();
 	}
 
 	@GET
 	@Path("{id}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response searchDayOff(@PathParam(value = "id") int id) {
-		DayOff d = df.findDayOff(id);
-		return Response.status(Status.FOUND).entity(d).build();
+	public Response searchHolidays(@PathParam(value = "id") int id) {
+		Holidays h = hs.findHolidays(id);
+		return Response.status(Status.FOUND).entity(h).build();
 
 	}
 
 	@DELETE
 	@Path("{id}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response deleteDayOff(@PathParam(value = "id") int id) {
-		Boolean b = df.deleteDayOff(id);
+	public Response deleteHolidays(@PathParam(value = "id") int id) {
+		Boolean b = hs.deleteHolidays(id);
 		return Response.status(Status.OK).entity(b).build();
 
 	}
 
 	@PUT
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response updateDayOff(DayOff d) {
-		df.updateDayOff(d);
+	public Response updateHolidays(Holidays h) {
+		hs.updateHolidays(h);
 		return Response.status(Status.OK).entity("update successful").build();
 	}
 

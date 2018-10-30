@@ -1,13 +1,22 @@
 package services;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+
+import entities.Client;
+import entities.Establishment;
 import entities.Resume;
 import interfaces.ResumeServiceLocal;
 import interfaces.ResumeServiceRemote;
@@ -62,5 +71,21 @@ public class ResumeService implements ResumeServiceRemote, ResumeServiceLocal {
 		List<Resume> listResume = q.getResultList();
 		return listResume;
 	}
+
+	@Override
+	public int lastIndex() {
+		try {
+			TypedQuery<Integer> index = em
+					.createQuery("select max(r.idResume) from Resume r", Integer.class);
+			
+			return index.getSingleResult();
+		} catch (NoResultException e) {
+			System.out.println(e);
+			return 0;
+		}
+	}
+	
+	
+	
 
 }

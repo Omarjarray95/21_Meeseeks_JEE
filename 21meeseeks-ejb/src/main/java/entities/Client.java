@@ -21,25 +21,22 @@ public class Client extends User implements Serializable {
 	private String logo;
 	@Enumerated(EnumType.STRING)
 	private ClientType clientType;
-	@ManyToOne(fetch=FetchType.EAGER)
+	
+	@ManyToOne(fetch = FetchType.EAGER)
 	private ClientCategory clientCategory;
-	@OneToMany(mappedBy = "client"
-			,fetch=FetchType.EAGER)
+	
+	@OneToMany(mappedBy = "client", fetch = FetchType.EAGER)
 	private List<Organigram> organigrams;
-	@OneToMany(mappedBy = "client"
-			,fetch=FetchType.EAGER)
+	@OneToMany(mappedBy = "client", fetch = FetchType.EAGER)
 	private List<Note> notes;
-	@OneToMany(mappedBy = "client"
-			,fetch=FetchType.EAGER)
+	@OneToMany(mappedBy = "client", fetch = FetchType.EAGER)
 	private List<ProjectRequest> projectRequests;
-	
-	
+
 	@Override
 	public String toString() {
-		return "Client [clientName=" + clientName + ", logo=" + logo
-				+ ", clientType=" + clientType + ", clientCategory="
-				+ clientCategory + ", organigrams=" + organigrams + ", notes="
-				+ notes + ", projectRequests=" + projectRequests + "]";
+		return "Client [clientName=" + clientName + ", logo=" + logo + ", clientType=" + clientType
+				+ ", clientCategory=" + clientCategory + ", organigrams=" + organigrams + ", notes=" + notes
+				+ ", projectRequests=" + projectRequests + "]";
 	}
 
 	public List<ProjectRequest> getProjectRequests() {
@@ -65,7 +62,6 @@ public class Client extends User implements Serializable {
 	public void setClientName(String clientName) {
 		this.clientName = clientName;
 	}
-
 
 	public enums.ClientType getClientType() {
 		return clientType;

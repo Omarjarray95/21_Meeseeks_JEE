@@ -8,10 +8,13 @@ import entities.DayOff;
 
 @Local
 public interface DayOffServieLocal {
-	public int addDayOff(DayOff d);
+	//public int addDayOff(DayOff d);
 	public DayOff findDayOff(int id);
 	public Boolean deleteDayOff(int id);
 	public void updateDayOff(DayOff d);
 	public List<DayOff> getAllDayOff();
+
+	//int addDayOff(DayOff d, int idLeaveType);
+	int addDayOff(DayOff d);
 
 }

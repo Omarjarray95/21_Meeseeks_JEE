@@ -1,18 +1,22 @@
 package entities;
 
 import java.io.Serializable;
-
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import enums.Availability;
 import enums.ContractType;
@@ -26,28 +30,45 @@ public class Resource extends User implements Serializable {
 	private Double rate;
 	@Enumerated(EnumType.STRING)
 	private ContractType contractType;
-	@ManyToOne
+
+	@ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.REMOVE })
 	private Seniority seniority;
+
 	private boolean state;
 	@Enumerated(EnumType.STRING)
 	private Availability availability;
-	@OneToOne
+
+	@OneToOne(fetch = FetchType.EAGER,cascade = { CascadeType.PERSIST, CascadeType.REMOVE } )
 	private Resume resume;
-	@OneToMany(mappedBy = "resource", fetch=FetchType.EAGER)
-	private Set<DayOff> dayOffs;
+
+	@OneToMany(mappedBy = "resource", fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.REMOVE })
+	private Set<DayOff> dayOffs = new HashSet<DayOff>();
+
+	@OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.REMOVE })
+	private Set<Note> notes = new HashSet<Note>();
+
+	@OneToMany(fetch = FetchType.EAGER, cascade = { CascadeType.REMOVE })
+	private Set<Holidays> holidays = new HashSet<Holidays>();
+
+	
+	@OneToMany(mappedBy = "resources",fetch=FetchType.EAGER, cascade = { CascadeType.PERSIST, CascadeType.REMOVE })
+	@JsonIgnore
+	private Set<Level> levels = new HashSet<Level>();
+
 	@OneToMany(fetch = FetchType.EAGER)
-	private Set<Note> notes;
-	@OneToMany(fetch = FetchType.EAGER)
-	private Set<Holidays> holidays;
-	@OneToMany(fetch = FetchType.EAGER)
-	private Set<Level> levels;
-	@OneToMany(fetch = FetchType.EAGER)
+	@JsonIgnore
 	private Set<Term> terms;
+
 	@OneToMany(fetch = FetchType.EAGER)
+	@JsonIgnore
 	private Set<LeaveRequest> leaveRequests;
-	@ManyToMany(mappedBy = "resources", fetch=FetchType.EAGER)
+	@ManyToMany(mappedBy = "resources", fetch = FetchType.EAGER)
+	@JsonIgnore
 	private Set<Field> fields;
 
+	public Resource() {
+
+	}
 
 	public Set<Level> getLevels() {
 		return levels;
@@ -175,6 +196,14 @@ public class Resource extends User implements Serializable {
 
 	public void setFields(Set<Field> fields) {
 		this.fields = fields;
+	}
+
+	@Override
+	public String toString() {
+		return "Resource [firstName=" + firstName + ", lastName=" + lastName + ", photo=" + photo + ", rate=" + rate
+				+ ", contractType=" + contractType + ", seniority=" + seniority + ", state=" + state + ", availability="
+				+ availability + ", resume=" + resume + ", dayOffs=" + dayOffs + ", notes=" + notes + ", holidays="
+				+ holidays + ", levels=" + levels + "]";
 	}
 
 	

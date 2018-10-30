@@ -4,13 +4,19 @@ import java.io.Serializable;
 
 import java.util.Date;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.jsonFormatVisitors.JsonFormatTypes;
 
 @Entity
 public class DayOff implements Serializable 
@@ -19,13 +25,17 @@ public class DayOff implements Serializable
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int idLeave;
+	
 	@ManyToOne
 	private LeaveType leaveType;
-	@Temporal(TemporalType.TIMESTAMP)
+	@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd")
+	@Temporal(TemporalType.DATE)
 	private Date startDate;
-	@Temporal(TemporalType.TIMESTAMP)
+	@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd")
+	@Temporal(TemporalType.DATE)
 	private Date endDate;
 	@ManyToOne
+	@JsonIgnore
 	private Resource resource;
 	
 
@@ -68,6 +78,12 @@ public class DayOff implements Serializable
 	public void setEndDate(Date endDate) {
 		this.endDate = endDate;
 	}
+
+	@Override
+	public String toString() {
+		return "DayOff [idLeave=" + idLeave + ", startDate=" + startDate + ", endDate=" + endDate + "]";
+	}
+	
 	
 
 }

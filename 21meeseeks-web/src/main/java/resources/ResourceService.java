@@ -18,6 +18,8 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 import entities.Resource;
+import enums.Availability;
+import enums.ContractType;
 import interfaces.ResourceServiceLocal;
 
 @Path("resource")
@@ -30,6 +32,7 @@ public class ResourceService {
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response addResource(Resource r){
 		if(r!=null){
+			System.out.println(r);
 			int i=rs.ajoutRessource(r);	
 		}
 		
@@ -67,6 +70,33 @@ public class ResourceService {
 	public Response updateResource(Resource r){
 		rs.updateResource(r);
 		return Response.status(Status.OK).entity("update successful").build();
+	}
+	
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path("index")
+	public Response getLastIndex(){
+		return Response.ok(rs.lastIndex()).build();
+	}
+	
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path("type/{type}")
+	public Response getResourceByType(@PathParam("type") String type) {
+		
+		if (!rs.getResourceByType(ContractType.valueOf(type)).isEmpty())
+			return Response.ok(rs.getResourceByType(ContractType.valueOf(type))).build();
+		return Response.status(Status.NOT_FOUND).build();
+	}
+	
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path("availability/{avaib}")
+	public Response getResourceByAvaibility(@PathParam("avaib") String avaib) {
+		
+		if (!rs.getResourceByAvaibility(Availability.valueOf(avaib)).isEmpty())
+			return Response.ok(rs.getResourceByAvaibility(Availability.valueOf(avaib))).build();
+		return Response.status(Status.NOT_FOUND).build();
 	}
 
 }
