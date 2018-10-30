@@ -17,19 +17,13 @@ public class Competence  implements Serializable{
 	private int idCompetence;
 	
 	private String Label;
-	@OneToMany(fetch=FetchType.EAGER)
+	@OneToMany(fetch= FetchType.EAGER)
 	private List<Level> levels;
-	@ManyToMany(mappedBy="competences" ,fetch=FetchType.EAGER)
+	@ManyToMany(mappedBy="competences",fetch = FetchType.EAGER)
 	private List<ProjectRequest> projectRequests;
-	private String description;
 	
 	
-	public String getDescription() {
-		return description;
-	}
-	public void setDescription(String description) {
-		this.description = description;
-	}
+	
 	public List<ProjectRequest> getProjectRequests() {
 		return projectRequests;
 	}
@@ -54,9 +48,5 @@ public class Competence  implements Serializable{
 	public void setLabel(String label) {
 		Label = label;
 	}
-	
-	
-	
-	
 
 }
