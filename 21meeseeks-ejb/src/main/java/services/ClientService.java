@@ -77,7 +77,8 @@ return c;
 			CriteriaQuery<Client> cquery = cb.createQuery(Client.class);
 			Root<Client> sm = cquery.from(Client.class);
 			for (Map.Entry<String, String> entry : criterias.entrySet())
-			{	if(entry.getKey().equals("clientCategory"))
+			{	
+				if(entry.getKey().equals("clientCategory"))
 			{
 				cquery.where(cb.like(sm.get("clientCategory").get("name"), entry.getValue().toUpperCase() ));
 

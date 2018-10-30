@@ -48,7 +48,9 @@ public class ProjectService implements ProjectServiceRemote, ProjectServiceLocal
 
 	@Override
 	public Project addProject(Project p) {
-		p.setClient(em.find(Client.class, p.getClient().getIdUser()));
+		if(p.getClient()!=null)
+		{
+		p.setClient(em.find(Client.class, p.getClient().getIdUser()));}
 		em.persist(p);
 		// TODO Auto-generated method stub
 		return p;
