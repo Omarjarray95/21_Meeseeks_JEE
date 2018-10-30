@@ -1,5 +1,7 @@
 package services;
 
+import java.util.Base64;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -14,6 +16,8 @@ import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+
+import org.mindrot.jbcrypt.BCrypt;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -54,6 +58,11 @@ public class ClientService implements ClientServiceRemote, ClientServiceLocal {
 			}
 		
 		}
+		if(c.getPassword()!=null)
+		{
+			String encodedString = Base64.getEncoder().withoutPadding().encodeToString(c.getPassword().getBytes());
+			c.setPassword(encodedString);
+			c.setPasswordLastChanged(new Date());}
 		em.persist(c);
 		return (c.getIdUser());
 	}

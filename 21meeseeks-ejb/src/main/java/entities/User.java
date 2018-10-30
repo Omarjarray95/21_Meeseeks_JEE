@@ -15,6 +15,9 @@ import javax.persistence.InheritanceType;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
 @Entity
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public class User implements Serializable {
@@ -25,8 +28,12 @@ public class User implements Serializable {
 	private String password;
 	private String address;
 	private String phoneNumber;
+	@JsonSerialize(as = Date.class)
+	@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd,HH:00", timezone="CET")
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date lastAuthentificated;
+	@JsonSerialize(as = Date.class)
+	@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd,HH:00", timezone="CET")
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date passwordLastChanged;
 

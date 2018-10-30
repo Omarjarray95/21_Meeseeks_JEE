@@ -3,6 +3,7 @@ package resources;
 import java.security.Key;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.Base64;
 import java.util.Date;
 
 import javax.crypto.spec.SecretKeySpec;
@@ -20,6 +21,9 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
+
+import org.apache.commons.codec.net.BCodec;
+import org.mindrot.jbcrypt.BCrypt;
 
 import entities.User;
 import io.jsonwebtoken.Jwts;
@@ -76,17 +80,21 @@ public class AuthenticationEndpoint {
 	/*	 if (!authenticatedUser.equals(null))
 			 return true;
 */
-    	
+    	if (username==null ) 	throw new Exception("NO USERNAME TYPED");
+
     	User u =  (User) em.createQuery("SELECT u FROM User u WHERE  email=:username")
     			.setParameter("username", username).getSingleResult();
     	
+    
+    	
+    	if (u==null ) 	throw new Exception("USER NOT FOUND");
+    	if (password==null ) 	throw new Exception("NO PASSWORD TYPED");
+
+    		byte[] decodedBytes = Base64.getDecoder().decode(u.getPassword());
+    		String decodedString = new String(decodedBytes);
+    	if (!decodedString.equals(password)) throw new Exception("WRONG PASSWORD");
     	
     	
-    	if (u==null ) 
-    		throw new Exception("invalid credentials");
-    	//LAHNE EL CRYBTAGE
-    	if (!u.getPassword().equals(password))
-    		throw new Exception("password GHALET");
     	/*
 		 * System.out.println(this.sctx.isSecure());
 		 * System.out.println(this.sctx.getUserPrincipal());
@@ -94,7 +102,9 @@ public class AuthenticationEndpoint {
 		 * if (this.sctx.isUserInRole("group4")) return true; throw new
 		 * SecurityException("User is unauthorized.");
 		 */
-		System.out.println("Authenticating user...");
+		u.setLastAuthentificated(new Date());
+		em.merge(u);
+    	System.out.println("Authenticating user...");
 	
 
     

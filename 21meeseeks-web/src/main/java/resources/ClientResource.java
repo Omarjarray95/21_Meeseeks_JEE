@@ -26,6 +26,8 @@ import javax.ws.rs.core.Response;
 
 import javax.ws.rs.core.Response.Status;
 
+import utilities.Secured;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -111,7 +113,7 @@ public class ClientResource {
 	  
 	
 	
-	
+	@Secured
 	@POST
 	@Path("category")
 	@Consumes(MediaType.APPLICATION_JSON)
