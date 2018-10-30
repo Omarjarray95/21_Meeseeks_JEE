@@ -23,7 +23,6 @@ import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
 
 import org.apache.commons.codec.net.BCodec;
-import org.mindrot.jbcrypt.BCrypt;
 
 import entities.User;
 import io.jsonwebtoken.Jwts;
