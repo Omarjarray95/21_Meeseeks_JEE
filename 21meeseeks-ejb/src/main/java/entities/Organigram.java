@@ -3,12 +3,14 @@ package entities;
 import java.io.Serializable;
 import java.util.Date;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
@@ -20,9 +22,9 @@ public class Organigram implements Serializable {
 	@Column(nullable=true)
 	private String programName;
 	private String projectManagerName;
-	private String projectName;
-	@ManyToOne
-	private Client client;
+	@OneToOne(cascade=CascadeType.PERSIST)
+	private Project project;
+
 	private String financialManager;
 	private String assignmentManager;
 	@Temporal(TemporalType.TIMESTAMP)
@@ -31,7 +33,12 @@ public class Organigram implements Serializable {
 	
 	
 	
-	
+	public Project getProject() {
+		return project;
+	}
+	public void setProject(Project project) {
+		this.project = project;
+	}
 	public int getIdOrganigram() {
 		return idOrganigram;
 	}
@@ -50,18 +57,7 @@ public class Organigram implements Serializable {
 	public void setProjectManagerName(String projectManagerName) {
 		this.projectManagerName = projectManagerName;
 	}
-	public String getProjectName() {
-		return projectName;
-	}
-	public void setProjectName(String projectName) {
-		this.projectName = projectName;
-	}
-	public Client getClient() {
-		return client;
-	}
-	public void setClient(Client client) {
-		this.client = client;
-	}
+
 	public String getFinancialManager() {
 		return financialManager;
 	}

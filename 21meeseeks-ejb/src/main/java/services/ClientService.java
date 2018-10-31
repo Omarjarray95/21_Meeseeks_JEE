@@ -1,5 +1,7 @@
 package services;
 
+import java.util.Base64;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -15,13 +17,14 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import entities.Client;
 import entities.ClientCategory;
-import entities.ClientType;
+import entities.Project;
 
 /**
  * Session Bean implementation class ClientService
@@ -40,10 +43,25 @@ public class ClientService implements ClientServiceRemote, ClientServiceLocal {
     /*
     add new client and return his id
     */
-    
+
 	@Override
 	public int addClient(Client c) {
+		if(c.getClientCategory()!=null){
+			if(findClientCategory(c.getClientCategory())!=null)
+			{
         c.setClientCategory(this.findClientCategory(c.getClientCategory()));
+			}
+			else
+			{
+				c.setClientCategory(null);
+			}
+		
+		}
+		if(c.getPassword()!=null)
+		{
+			String encodedString = Base64.getEncoder().withoutPadding().encodeToString(c.getPassword().getBytes());
+			c.setPassword(encodedString);
+			c.setPasswordLastChanged(new Date());}
 		em.persist(c);
 		return (c.getIdUser());
 	}
@@ -59,9 +77,62 @@ public class ClientService implements ClientServiceRemote, ClientServiceLocal {
 		Client c=(Client)em.find(Client.class, i);
 return c;
 	}
+	//searching for client with many criterias(clientName,address,mail) using query parameters
+	
+		@Override
+		public List<Client> getClientsByCriterias(Map<String, String> criterias) {
+			CriteriaBuilder cb = em.getCriteriaBuilder();
+			CriteriaQuery<Client> cquery = cb.createQuery(Client.class);
+			Root<Client> sm = cquery.from(Client.class);
+			for (Map.Entry<String, String> entry : criterias.entrySet())
+			{	
+				if(entry.getKey().equals("clientCategory"))
+			{
+				cquery.where(cb.like(sm.get("clientCategory").get("name"), entry.getValue().toUpperCase() ));
+
+			}
+			else if(entry.getKey().equals("clientType"))
+			{ 
+				cquery.where(cb.equal(sm.get("clientType"), enums.ClientType.valueOf(entry.getValue().toUpperCase()) ));
+
+			}
+			else
+				{
+				cquery.where(cb.like(sm.get(entry.getKey()), entry.getValue().toUpperCase() ));
+				}
+
+			}
+			TypedQuery<Client> query=em.createQuery(cquery);
+			return query.getResultList();
+		}
 
 	
-	
+		@Override
+		public Client editClient(Client c) {
+			Client oldclient=em.find(Client.class,c.getIdUser());
+
+			if(c.getClientCategory()!=null){
+				if(findClientCategory(c.getClientCategory())!=null)
+				{
+			        oldclient.setClientCategory(this.findClientCategory(c.getClientCategory()));
+				}
+			
+			
+			}
+			
+			
+		
+				oldclient.setClientName(c.getClientName());
+				oldclient.setEmail(c.getEmail());
+				oldclient.setLogo(c.getLogo());
+				oldclient.setPhoneNumber(c.getPhoneNumber());
+				oldclient.setClientType(c.getClientType());
+		        oldclient.setAddress(c.getAddress());
+			em.merge(oldclient);
+			return oldclient;
+		}
+		
+		
 	//
 	//customize category
 	//
@@ -81,8 +152,15 @@ return c;
 	@Override
 	public ClientCategory findClientCategory(ClientCategory cc) {
 		TypedQuery<ClientCategory> query=em.createQuery("SELECT e from ClientCategory e  where e.name = :name",ClientCategory.class);
-		ClientCategory cf=query.setParameter("name",cc.getName()).getSingleResult();
-return cf;
+		List<ClientCategory> lcf=query.setParameter("name",cc.getName()).getResultList();
+		if(lcf.size()!=0)
+		{
+			return lcf.get(0);
+		}
+		else
+		{
+			return null;
+		}
 	}
 	@Override
 	public boolean deleteClientCategory(String title) {
@@ -100,63 +178,29 @@ return cf;
 	@Override
 	public List<ClientCategory> listClientCategories() {
 		// TODO Auto-generated method stub
-		return null;
+		TypedQuery<ClientCategory> query=em.createQuery("SELECT e from ClientCategory e",ClientCategory.class);
+		List<ClientCategory> cf=query.getResultList();
+		return cf;
 	}
+
 	
-	
-	//
-	//customize type
-	//
-	
-	
+
 	@Override
-	public int addClientType(ClientType ct) {
-		TypedQuery<ClientType> query=em.createQuery("SELECT e from ClientType e  where e.name = :name",ClientType.class);
-		if(query.setParameter("name", ct.getName()).getResultList().size()==0)
+	public ClientCategory editClientCategory(ClientCategory c) {
+		// TODO Auto-generated method stub
+		ClientCategory cc=em.find(ClientCategory.class,c.getIdCategory());
+		if((cc!=null))
 		{
-			
-			     em.persist(ct);
-			     return ct.getIdClientType();
+			cc.setDescription(c.getDescription());
+			cc.setName(c.getName());
+			em.merge(cc);
+				
 		}
-	  return 0; 
-	}
-	@Override
-	public boolean deleteClientType(String title) {
-
-		return true;
-	}
-	@Override
-	public List<ClientType> listClientType() {
-return null;		
-	}
-//searching for client with many criterias(clientName,address,mail) using query parameters
+		return cc;
+		
+	}	
 	
-	@Override
-	public List<Client> getClientsByCriterias(Map<String, String> criterias) {
-		CriteriaBuilder cb = em.getCriteriaBuilder();
-		CriteriaQuery<Client> cquery = cb.createQuery(Client.class);
-		Root<Client> sm = cquery.from(Client.class);
-		for (Map.Entry<String, String> entry : criterias.entrySet())
-		{	if(entry.getKey().equals("clientCategory"))
-		{
-			cquery.where(cb.like(sm.get("clientCategory").get("name"), entry.getValue().toUpperCase() ));
-
-		}
-		else if(entry.getKey().equals("clientType"))
-		{ 
-			cquery.where(cb.like(sm.get("clientCategory").get("name"), entry.getValue().toUpperCase() ));
-
-		}
-		else
-			{
-			cquery.where(cb.like(sm.get(entry.getKey()), entry.getValue().toUpperCase() ));
-			}
-
-		}
-		TypedQuery<Client> query=em.createQuery(cquery);
-		return query.getResultList();
-	}
-
+	
 	//
 	//json converting
 	//
@@ -193,5 +237,8 @@ return null;
 			
 			return test;
 	}
+
+
+	
 
 }

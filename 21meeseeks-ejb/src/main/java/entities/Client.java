@@ -81,11 +81,11 @@ public class Client extends User implements Serializable {
 
 	public List<Organigram> getOrganigrams() {
 		return organigrams;
-	}
+    }
 
-	public void setOrganigrams(List<Organigram> organigrams) {
-		this.organigrams = organigrams;
-	}
+    public void setOrganigrams(List<Organigram> organigrams) {
+    	this.organigrams = organigrams;
+    }
 
 	public List<Note> getNotes() {
 		return notes;

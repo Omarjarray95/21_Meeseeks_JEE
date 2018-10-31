@@ -54,7 +54,7 @@ public class DayOff implements Serializable
 	public void setLeaveType(LeaveType leaveType) {
 		this.leaveType = leaveType;
 	}
-
+	
 	public Resource getResource() {
 		return resource;
 	}
