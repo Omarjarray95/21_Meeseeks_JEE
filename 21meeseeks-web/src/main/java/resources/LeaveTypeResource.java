@@ -53,7 +53,7 @@ public class LeaveTypeResource
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response UpdateLeaveType(LeaveType LT) 
 	{
-		if (LTSL.UpdateLeaveType(LT))
+		if (LTSL.updateLeaveType(LT))
 		{
 			return Response.status(Status.OK).entity(LT).build();
 		}

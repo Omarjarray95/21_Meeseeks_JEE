@@ -25,8 +25,7 @@ public class Client extends User implements Serializable {
 	@ManyToOne(fetch = FetchType.EAGER)
 	private ClientCategory clientCategory;
 	
-	@OneToMany(mappedBy = "client", fetch = FetchType.EAGER)
-	private List<Organigram> organigrams;
+
 	@OneToMany(mappedBy = "client", fetch = FetchType.EAGER)
 	private List<Note> notes;
 	@OneToMany(mappedBy = "client", fetch = FetchType.EAGER)
@@ -35,7 +34,7 @@ public class Client extends User implements Serializable {
 	@Override
 	public String toString() {
 		return "Client [clientName=" + clientName + ", logo=" + logo + ", clientType=" + clientType
-				+ ", clientCategory=" + clientCategory + ", organigrams=" + organigrams + ", notes=" + notes
+				+ ", clientCategory=" + clientCategory  + ", notes=" + notes
 				+ ", projectRequests=" + projectRequests + "]";
 	}
 
@@ -79,13 +78,6 @@ public class Client extends User implements Serializable {
 		this.clientCategory = clientCategory;
 	}
 
-	public List<Organigram> getOrganigrams() {
-		return organigrams;
-    }
-
-    public void setOrganigrams(List<Organigram> organigrams) {
-    	this.organigrams = organigrams;
-    }
 
 	public List<Note> getNotes() {
 		return notes;
