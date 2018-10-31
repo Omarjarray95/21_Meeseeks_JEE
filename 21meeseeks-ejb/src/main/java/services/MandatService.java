@@ -19,6 +19,7 @@ import entities.Term;
 import enums.Availability;
 import interfaces.MandatServiceLocal;
 import interfaces.MandatServiceRemote;
+import utils.SendEmail;
 
 /**
  * Session Bean implementation class MondatService
@@ -49,18 +50,8 @@ public class MandatService implements MandatServiceRemote, MandatServiceLocal {
 	}
 
 	@Override
-	public List<DayOff> listDayOff(Resource resource, Term term) {
-		List<DayOff> listDayOff = entityManager
-				.createQuery("select d.startDate from  Resource as r inner join  DayOff as d on r.idUser=d.idUser "
-						+ " inner join  Term as t on r.idUser=t.idUser where d.startDate.between(t.dateStart,t.dateEnd)")
-				.getResultList();
-
-		return listDayOff;
-
-	}
-
-	@Override
 	public void addTerm(Term term) {
+
 		entityManager.persist(term);
 
 	}
@@ -74,7 +65,6 @@ public class MandatService implements MandatServiceRemote, MandatServiceLocal {
 
 		int workDays = 0;
 
-		// Return 0 if start and end are the same
 		if (startCal.getTimeInMillis() == endCal.getTimeInMillis()) {
 			return 0;
 		}
@@ -85,21 +75,17 @@ public class MandatService implements MandatServiceRemote, MandatServiceLocal {
 		}
 
 		do {
-			// excluding start date
 			startCal.add(Calendar.DAY_OF_MONTH, 1);
 			if (startCal.get(Calendar.DAY_OF_WEEK) != Calendar.SATURDAY
 					&& startCal.get(Calendar.DAY_OF_WEEK) != Calendar.SUNDAY) {
 				++workDays;
 			}
-		} while (startCal.getTimeInMillis() < endCal.getTimeInMillis()); // excluding
-																			// end
-																			// date
-
+		} while (startCal.getTimeInMillis() < endCal.getTimeInMillis());
 		return workDays;
 	}
 
 	@Override
-	public Date calculateEndDateTerm(Term term) {
+	public Term calculateEndDateTerm(Term term) {
 		int totalDays = 0;
 		Calendar cal = Calendar.getInstance();
 
@@ -131,29 +117,27 @@ public class MandatService implements MandatServiceRemote, MandatServiceLocal {
 					LocalDate start = d.getStartDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 					LocalDate end = d.getEndDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 					long days = ChronoUnit.DAYS.between(start, end);
-					System.out.println("****days**"+days);
+					System.out.println("****days**" + days);
 					cal.setTime(dateFin);
 					cal.add(Calendar.DAY_OF_MONTH, Math.toIntExact(days));
-				
-					dateFin = calculDayWork(dateFin, cal.getTime(),Math.toIntExact(days));
-					
-				}
-				else {
+
+					dateFin = calculDayWork(dateFin, cal.getTime(), Math.toIntExact(days));
+
+				} else {
 					LocalDate startD = d.getStartDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 					LocalDate fin = dateFin.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 					long days = ChronoUnit.DAYS.between(startD, fin);
 					cal.setTime(d.getEndDate());
 					cal.add(Calendar.DAY_OF_MONTH, Math.toIntExact(days));
-					
+
 					dateFin = calculDayWork(dateFin, cal.getTime(), Math.toIntExact(days));
-					
-					
+
 				}
 			}
 
 		}
-
-		return dateFin;
+		term.setDateEnd(dateFin);
+		return term;
 	}
 
 	private Date calculDayWork(Date dateDebut, Date dateFin, int numberOfDays) {
@@ -182,5 +166,51 @@ public class MandatService implements MandatServiceRemote, MandatServiceLocal {
 		}
 		return dateFin;
 
+	}
+
+	@Override
+	public String testerDateDeb(Resource resource, Term term) {
+		Calendar cal = Calendar.getInstance();
+
+		LocalDate endTerm = term.getDateEnd().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+		LocalDate sysdate = cal.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+		long days = ChronoUnit.DAYS.between(endTerm, sysdate);
+		if (resource.getAvailability().equals("AvailableSoon")
+				| resource.getAvailability().equals(" UnavailableSoon")) {
+			cal.add(Calendar.DAY_OF_MONTH, Math.toIntExact(days));
+			term.setDateStart(cal.getTime());
+			return "Resource est disponible a patir de ce jour la";
+		} else if (resource.getAvailability().equals("Available")) {
+			return "resource est disponible vous pouvez choisir date debut";
+		}
+		return "le resource n'est pas disponible";
+
+	}
+
+	@Override
+	public float fraisMandat(Term term) {
+
+		// Resource resource = entityManager.find(Resource.class,
+		// term.getPkTerm().getIdResource());
+		return (float) (((term.getResources().getSalary() / 30) * term.getNumberofDaysTerm()) * 1.8);
+	}
+
+	@Override
+	public void alerteMandat() {
+		List<Term> list = entityManager
+				.createQuery("select t from Term t where DATEDIFF( t.dateEnd,CURRENT_DATE )=40", Term.class)
+				.getResultList();
+
+		for (Term term : list) {
+			if (!term.isSended()) {
+				String subject = "Alerte - 40 jours";
+				String object = "notification -40jours avant la fin du mandat!!!!!";
+				String email = term.getResources().getEmail();
+				SendEmail.envoyer(email, subject, object);
+
+				term.setSended(true);
+				entityManager.merge(term);
+			}
+		}
 	}
 }

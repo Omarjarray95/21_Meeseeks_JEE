@@ -1,22 +1,15 @@
 package utils;
 
-import java.time.LocalDate;
 import java.util.Calendar;
-import java.util.EnumSet;
-import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
 
-import entities.Competence;
-import entities.PkTerm;
 import entities.Resource;
 import entities.Term;
-import enums.Availability;
 import interfaces.ArchiveServiceLocal;
-import interfaces.MandatServiceLocal;
 
 @Startup
 @Singleton
@@ -76,5 +69,8 @@ public class TestEJB {
 //		pkTerm.setIdResource(1);
 //		term.setPkTerm(pkTerm);
 	//	archiveServiceLocal.AddArchiveTerm(term);
+		
+		
+		
 	}
 }

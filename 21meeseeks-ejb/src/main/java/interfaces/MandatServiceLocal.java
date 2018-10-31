@@ -18,8 +18,13 @@ public interface MandatServiceLocal {
 			EnumSet<Availability> availables);
 
 	public void addTerm(Term term);
-	public Date calculateEndDateTerm(Term term);
-	public List<DayOff> listDayOff(Resource resource,
-			Term term);
+
+	public Term calculateEndDateTerm(Term term);
+
+	public String testerDateDeb(Resource resource, Term term);
+
+	public float fraisMandat(Term term);
+	
+	public void alerteMandat();
 
 }

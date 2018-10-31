@@ -22,7 +22,7 @@ public class Resource extends User implements Serializable {
 	private String lastName;
 	private String photo;
 	private Double rate;
-	
+	private Double salary;
 	@Enumerated(EnumType.STRING)
 	private ContractType contractType;
 	@ManyToOne
@@ -181,6 +181,14 @@ public class Resource extends User implements Serializable {
 
 	public void setFields(List<Field> fields) {
 		this.fields = fields;
+	}
+
+	public Double getSalary() {
+		return salary;
+	}
+
+	public void setSalary(Double salary) {
+		this.salary = salary;
 	}
 
 }
