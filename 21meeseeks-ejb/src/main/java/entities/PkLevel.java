@@ -8,7 +8,7 @@ import javax.persistence.Embeddable;
 public class PkLevel implements Serializable {
 	private int idResource;
 	private int idCompetence;
-	private int idLevel;
+	//private int idLevel;
 	
 	
 	public int getIdResource() {
@@ -23,18 +23,43 @@ public class PkLevel implements Serializable {
 	public void setIdCompetence(int idCompetence) {
 		this.idCompetence = idCompetence;
 	}
-	public int getIdLevel() {
-		return idLevel;
-	}
-	public void setIdLevel(int idLevel) {
-		this.idLevel = idLevel;
-	}
+//	public int getIdLevel() {
+//		return idLevel;
+//	}
+//	public void setIdLevel(int idLevel) {
+//		this.idLevel = idLevel;
+//	}
+//	@Override
+//	public int hashCode() {
+//		final int prime = 31;
+//		int result = 1;
+//		result = prime * result + idCompetence;
+//		result = prime * result + idLevel;
+//		result = prime * result + idResource;
+//		return result;
+//	}
+//	@Override
+//	public boolean equals(Object obj) {
+//		if (this == obj)
+//			return true;
+//		if (obj == null)
+//			return false;
+//		if (getClass() != obj.getClass())
+//			return false;
+//		PkLevel other = (PkLevel) obj;
+//		if (idCompetence != other.idCompetence)
+//			return false;
+//		if (idLevel != other.idLevel)
+//			return false;
+//		if (idResource != other.idResource)
+//			return false;
+//		return true;
+//	}
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + idCompetence;
-		result = prime * result + idLevel;
 		result = prime * result + idResource;
 		return result;
 	}
@@ -49,12 +74,12 @@ public class PkLevel implements Serializable {
 		PkLevel other = (PkLevel) obj;
 		if (idCompetence != other.idCompetence)
 			return false;
-		if (idLevel != other.idLevel)
-			return false;
 		if (idResource != other.idResource)
 			return false;
 		return true;
 	}
+	
+	
 	
 	
 

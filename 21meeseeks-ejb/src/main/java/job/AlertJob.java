@@ -22,7 +22,7 @@ public class AlertJob{
     public void atSchedule() throws InterruptedException {
     	mandatService.alerteMandat();
         System.out.println("DeclarativeScheduler:: In atSchedule()");
-        Thread.sleep(86400000);
+       Thread.sleep(86400000);
     }
 
 //

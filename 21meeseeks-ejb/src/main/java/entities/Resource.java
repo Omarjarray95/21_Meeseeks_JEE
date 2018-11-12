@@ -12,6 +12,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import enums.Availability;
 import enums.ContractType;
 
@@ -32,18 +34,26 @@ public class Resource extends User implements Serializable {
 	private Availability availability;
 	@OneToOne
 	private Resume resume;
+	@JsonIgnore
 	@OneToMany(mappedBy = "resource")
 	private List<DayOff> dayOffs;
+	@JsonIgnore
 	@OneToMany
 	private List<Note> notes;
+	@JsonIgnore
 	@OneToMany
 	private List<Holidays> holidays;
+	
+	@JsonIgnore
 	@OneToMany
 	private List<Level> levels;
+	@JsonIgnore
 	@OneToMany
 	private List<Term> terms;
+	@JsonIgnore
 	@OneToMany
 	private List<LeaveRequest> leaveRequests;
+	@JsonIgnore
 	@ManyToMany(mappedBy = "resources")
 	private List<Field> fields;
 
@@ -135,13 +145,6 @@ public class Resource extends User implements Serializable {
 		this.availability = availability;
 	}
 
-	public List<DayOff> getLeaves() {
-		return dayOffs;
-	}
-
-	public void setLeaves(List<DayOff> dayOffs) {
-		this.dayOffs = dayOffs;
-	}
 
 	public List<Note> getNotes() {
 		return notes;

@@ -30,7 +30,7 @@ public class ArchiveService implements ArchiveServiceRemote, ArchiveServiceLocal
 
 	@Override
 	public void AddArchiveTerm(Term term) {
-		List<Term> list = entityManager.createQuery("select t from Term t  where :dateEnd < CURRENT_DATE  and t.archived=:archive ")
+		List<Term> list = entityManager.createQuery("select t from Term t  where t.dateEnd < CURRENT_DATE and t.dateEnd < :dateEnd and t.archived=:archive ")
 				.setParameter("dateEnd", term.getDateEnd())
 				.setParameter("archive", false).getResultList();
 		int n = list.size();
