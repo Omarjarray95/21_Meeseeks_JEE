@@ -1,16 +1,16 @@
 package entities;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
-import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
 @Entity
@@ -18,29 +18,23 @@ public class Resume implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int idResume;
-	
-	@OneToOne(mappedBy = "resume")
-	private Resource resource;
-	
+
 	private String description;
-	
-	@ManyToMany
-	private List<Certificate> certificates;
-	
-	@OneToMany(mappedBy = "resume", cascade= CascadeType.PERSIST)
-	private List<Degree> listDegree = new ArrayList<>();
-	
-	@OneToMany(mappedBy = "resume", cascade= CascadeType.PERSIST)
-	private List<JobDate> listJob = new ArrayList<>();
-	
-	public void addDegree(Degree degree){
-		degree.setResume(this);
-		this.listDegree.add(degree);
-	}
-	
-	public void addJob(JobDate jd){
-		jd.setResume(this);
-		this.listJob.add(jd);
+
+	@ManyToMany(fetch = FetchType.EAGER)
+	private Set<Establishment> etablissement = new HashSet<Establishment>();
+
+	@ManyToMany(fetch = FetchType.EAGER)
+	private Set<Society> society = new HashSet<Society>();
+
+	@ManyToMany(fetch = FetchType.EAGER)
+	private Set<Certificate> certificates = new HashSet<Certificate>();
+
+	@ManyToMany(fetch = FetchType.EAGER)
+	private Set<Competence> competence = new HashSet<Competence>();
+
+	public Resume() {
+
 	}
 
 	public int getIdResume() {
@@ -51,14 +45,6 @@ public class Resume implements Serializable {
 		this.idResume = idResume;
 	}
 
-	public Resource getResource() {
-		return resource;
-	}
-
-	public void setResource(Resource resource) {
-		this.resource = resource;
-	}
-
 	public String getDescription() {
 		return description;
 	}
@@ -67,28 +53,58 @@ public class Resume implements Serializable {
 		this.description = description;
 	}
 
-	public List<Certificate> getCertificates() {
+	public Set<Establishment> getEtablissement() {
+		return etablissement;
+	}
+
+	public void setEtablissement(Set<Establishment> etablissement) {
+		this.etablissement = etablissement;
+	}
+
+	public Set<Society> getSociety() {
+		return society;
+	}
+
+	public void setSociety(Set<Society> society) {
+		this.society = society;
+	}
+
+	public Set<Certificate> getCertificates() {
 		return certificates;
 	}
 
-	public void setCertificates(List<Certificate> certificates) {
+	public void setCertificates(Set<Certificate> certificates) {
 		this.certificates = certificates;
 	}
 
-	public List<Degree> getListDegree() {
-		return listDegree;
+	public Set<Competence> getCompetence() {
+		return competence;
 	}
 
-	public void setListDegree(List<Degree> listDegree) {
-		this.listDegree = listDegree;
+	public void setCompetence(Set<Competence> competence) {
+		this.competence = competence;
 	}
 
-	public List<JobDate> getListJob() {
-		return listJob;
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + idResume;
+		return result;
 	}
 
-	public void setListJob(List<JobDate> listJob) {
-		this.listJob = listJob;
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Resume other = (Resume) obj;
+		if (idResume != other.idResume)
+			return false;
+		return true;
 	}
 
 }

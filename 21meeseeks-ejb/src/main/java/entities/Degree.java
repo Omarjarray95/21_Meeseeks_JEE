@@ -17,9 +17,7 @@ public class Degree implements Serializable {
 	@Temporal(TemporalType.DATE)
 	private Date gradYear;
 	private String name;
-	@ManyToOne
-	@JoinColumn(name = "idResume", referencedColumnName = "idResume", insertable = false, updatable = false)
-	private Resume resume;
+	
 	@ManyToOne
 	@JoinColumn(name = "idEstablishment", referencedColumnName = "idEstablishment", insertable = false, updatable = false)
 	private Establishment establishment;
@@ -48,14 +46,7 @@ public class Degree implements Serializable {
 		this.name = name;
 	}
 
-	public Resume getResume() {
-		return resume;
-	}
-
-	public void setResume(Resume resume) {
-		this.resume = resume;
-	}
-
+	
 	public Establishment getEstablishment() {
 		return establishment;
 	}

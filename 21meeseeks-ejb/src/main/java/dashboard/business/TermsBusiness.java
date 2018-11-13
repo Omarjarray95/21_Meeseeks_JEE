@@ -28,7 +28,7 @@ public class TermsBusiness implements TermsBusinessInterface{
 	@Override
 	public Integer countTerms() {
 		// TODO Auto-generated method stub
-		Integer count = (Integer)em.createQuery("SELECT count(t) FROM Term t").getSingleResult();
+		Integer count = Math.toIntExact((Long)em.createQuery("SELECT count(t) FROM Term t").getSingleResult());
 		return count;
 	}
 

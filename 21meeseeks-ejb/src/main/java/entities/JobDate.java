@@ -18,9 +18,7 @@ public class JobDate implements Serializable {
 	private Date startDate;
 	@Temporal(TemporalType.DATE)
 	private Date endDate;
-	@ManyToOne
-	@JoinColumn(name = "idResume", referencedColumnName = "idResume", insertable = false, updatable = false)
-	private Resume resume;
+	
 	@ManyToOne
 	@JoinColumn(name = "idSociety", referencedColumnName = "idSociety", insertable = false, updatable = false)
 	private Society society;
@@ -47,14 +45,6 @@ public class JobDate implements Serializable {
 
 	public void setEndDate(Date endDate) {
 		this.endDate = endDate;
-	}
-
-	public Resume getResume() {
-		return resume;
-	}
-
-	public void setResume(Resume resume) {
-		this.resume = resume;
 	}
 
 	public Society getSociety() {

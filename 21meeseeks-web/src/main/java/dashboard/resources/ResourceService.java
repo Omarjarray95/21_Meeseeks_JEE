@@ -88,9 +88,24 @@ public class ResourceService {
 			Map<Resource, Long> HighestTermsNumber = ((Map<Resource, Long>) rbi.getMostTerm(null,dateFromDate,dateToDate)).entrySet().
 					stream().filter(e->e.getValue()==maxNum)
 					.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
-			return Response.status(Status.ACCEPTED).entity(HighestTermsNumber).build();
+			List<List<Object>> list = new ArrayList<>();
+			for (Map.Entry<Resource, Long> entry: HighestTermsNumber.entrySet()) {
+				List<Object> list2 = new ArrayList<>();
+				list2.add(entry.getValue());
+				list2.add(entry.getKey());
+				list.add(list2);
+			}
+			return Response.status(Status.ACCEPTED).entity(list).build();
 		}
-		return Response.status(Status.ACCEPTED).entity(rbi.getMostTerm(limit,dateFromDate,dateToDate)).build();
+		Map<Resource, Long> map= rbi.getMostTerm(limit,dateFromDate,dateToDate);
+		List<List<Object>> list = new ArrayList<>();
+		for (Map.Entry<Resource, Long> entry: map.entrySet()) {
+			List<Object> list2 = new ArrayList<>();
+			list2.add(entry.getValue());
+			list2.add(entry.getKey());
+			list.add(list2);
+		}
+		return Response.status(Status.ACCEPTED).entity(list).build();
 	}
 	
 	
