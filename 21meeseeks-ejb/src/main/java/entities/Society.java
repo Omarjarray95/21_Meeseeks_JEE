@@ -16,9 +16,7 @@ public class Society implements Serializable {
 	private int idSociety;
 	private String name;
 	private String description;
-	@OneToMany(mappedBy = "society")
-	private List<JobDate> listJob;
-
+	
 	public int getIdSociety() {
 		return idSociety;
 	}
@@ -43,13 +41,6 @@ public class Society implements Serializable {
 		this.description = description;
 	}
 
-	public List<JobDate> getListJob() {
-		return listJob;
-	}
-
-	public void setListJob(List<JobDate> listJob) {
-		this.listJob = listJob;
-	}
 	
 
 }

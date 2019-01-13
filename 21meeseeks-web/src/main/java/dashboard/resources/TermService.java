@@ -55,4 +55,19 @@ public class TermService {
 	public Response NumberOfTermsByCompetence(@PathParam(value="competence" )Integer id){
 		return Response.status(Status.ACCEPTED).entity(tbi.countTermsByCompetence(id)).build();
 	}
+	
+	@GET
+	@Path("terms/{id}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getTermsByResource(@PathParam(value="id") Integer id , @QueryParam(value="start") Date dateStart, @QueryParam(value="end") Date dateEnd){
+		return Response.status(Status.ACCEPTED).header("Access-Control-Allow-Origin", "*")
+				.entity(tbi.getTermsByResource(id, dateStart, dateEnd)).build();
+	}
+	@GET
+	@Path("terms/clients")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getProfitByClient(){
+		return Response.status(Status.ACCEPTED).header("Access-Control-Allow-Origin", "*")
+				.entity(tbi.getProfitByClients()).build();
+	}
 }

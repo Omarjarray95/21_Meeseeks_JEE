@@ -95,7 +95,10 @@ public class ResourceService {
 				list2.add(entry.getKey());
 				list.add(list2);
 			}
-			return Response.status(Status.ACCEPTED).entity(list).build();
+			return Response.status(Status.ACCEPTED).header("Access-Control-Allow-Origin", "*").header("Access-Control-Allow-Headers", "origin, content-type, accept, authorization")
+		            .header("Access-Control-Allow-Credentials", "true")
+		            .header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, HEAD")
+		            .header("Access-Control-Max-Age", "1209600").entity(list).build();
 		}
 		Map<Resource, Long> map= rbi.getMostTerm(limit,dateFromDate,dateToDate);
 		List<List<Object>> list = new ArrayList<>();
@@ -105,7 +108,10 @@ public class ResourceService {
 			list2.add(entry.getKey());
 			list.add(list2);
 		}
-		return Response.status(Status.ACCEPTED).entity(list).build();
+		return Response.status(Status.ACCEPTED).header("Access-Control-Allow-Origin", "*").header("Access-Control-Allow-Headers", "origin, content-type, accept, authorization")
+	            .header("Access-Control-Allow-Credentials", "true")
+	            .header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, HEAD")
+	            .header("Access-Control-Max-Age", "1209600").entity(list).build();
 	}
 	
 	
@@ -237,4 +243,29 @@ public class ResourceService {
         return Response.status(Status.ACCEPTED).entity(jsonArray).build();
 	}
 	
+	@GET
+	@Path("resource/working")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response whoWorkedWithWho(){
+		rbi.whoWorkedWithWho();
+		return Response.status(Status.ACCEPTED).header("Access-Control-Allow-Origin",'*').entity(rbi.whoWorkedWithWho()).build();
+	}
+	@GET
+	@Path("resource/one/{id}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getResourceById(@PathParam("id")Integer id){
+		return Response.status(Status.ACCEPTED).header("Access-Control-Allow-Origin",'*').entity(rbi.getResourceById(id)).build();
+	}
+	@GET
+	@Path("resource/all")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getAllResources(){
+		return Response.status(Status.ACCEPTED).header("Access-Control-Allow-Origin",'*').entity(rbi.getAllResources()).build();
+	}
+	@GET
+	@Path("resource/clientTerm/{id}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getClientAndTerm(@PathParam("id")Integer id){
+		return Response.status(Status.ACCEPTED).header("Access-Control-Allow-Origin",'*').entity(rbi.getClientsWork(id)).build();
+	}
 }

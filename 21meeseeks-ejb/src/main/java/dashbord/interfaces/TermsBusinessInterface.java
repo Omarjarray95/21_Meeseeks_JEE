@@ -8,6 +8,7 @@ import entities.Term;
 
 public interface TermsBusinessInterface {
 
+	public List<Term> getTermsByResource(Integer idResource);
 	public Integer countTerms();
 	public Integer countTermsInPeriod(Date dateFrom , Date dateTo);
 	public Integer countTermsByCompetence(Integer idCompetence);
@@ -18,6 +19,6 @@ public interface TermsBusinessInterface {
 	public Double incomeInPeriod(Date dateFrom , Date dateTo);
 	public List<Term> getTermsByResource(Integer id,Date dateFrom , Date dateTo);
 	public Double AVGTermDays(Date dateFrom , Date dateTo);
-	
+	public List<Object[]> getProfitByClients();
 	
 }

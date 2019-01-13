@@ -18,6 +18,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import enums.ProjectType;
@@ -41,8 +42,8 @@ public class Project  implements Serializable{
 	private String description;
 	@Enumerated(EnumType.STRING)
 	private ProjectType projectType;
-	
-	@OneToMany(fetch=FetchType.EAGER)
+	@JsonIgnore
+	@OneToMany
 	private List<Term> terms;
 	
 	@ManyToOne

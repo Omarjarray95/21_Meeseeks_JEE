@@ -27,6 +27,9 @@ public interface ResourceBusinessInterface {
 	public List<Object[]> getResourcesByAdress(String adress , Date dateStart , Date dateEnd);
 	public Map<Competence , Long> getRessourcesByCompetence();
 	public Competence getCompetence();
-	
+	public List<List<Object[]>> whoWorkedWithWho();
+	public Resource getResourceById(Integer id);
+	public List<Resource> getAllResources();
+	public List<Object[]> getClientsWork(Integer id);
 	
 }

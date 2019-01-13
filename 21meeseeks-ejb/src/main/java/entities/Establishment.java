@@ -18,14 +18,7 @@ public class Establishment implements Serializable {
 	private int idEstablishment;
 	private String nameEstablishment;
 	
-	@OneToMany(mappedBy = "establishment", cascade= CascadeType.PERSIST)
-	private List<Degree> degreeList = new ArrayList<>();
 	
-	public void addDegree(Degree dg){
-		dg.setEstablishment(this);
-		this.degreeList.add(dg);
-	}
-
 	public int getIdEstablishment() {
 		return idEstablishment;
 	}
@@ -42,13 +35,5 @@ public class Establishment implements Serializable {
 		this.nameEstablishment = nameEstablishment;
 	}
 
-	public List<Degree> getDegreeList() {
-		return degreeList;
-	}
-
-	public void setDegreeList(List<Degree> degreeList) {
-		this.degreeList = degreeList;
-	}
-
-	
+		
 }

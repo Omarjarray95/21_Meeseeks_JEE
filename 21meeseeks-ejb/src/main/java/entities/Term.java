@@ -5,6 +5,7 @@ import java.util.Date;
 
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -13,6 +14,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 @Entity
 public class Term implements Serializable{
 	
@@ -30,7 +33,7 @@ public class Term implements Serializable{
 	@ManyToOne
 	@JoinColumn(name="idResource",referencedColumnName="idUser",insertable=false,updatable=false)
 	private Resource resources;
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name="idProject",referencedColumnName="idProject",insertable=false,updatable=false)
 	private Project projects;
 	

@@ -8,7 +8,9 @@ import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.EnumSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import javax.ejb.Stateless;
@@ -16,6 +18,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 import dashbord.interfaces.TermsBusinessInterface;
+import entities.Project;
 import entities.Term;
 
 @Stateless
@@ -32,6 +35,8 @@ public class TermsBusiness implements TermsBusinessInterface{
 		return count;
 	}
 
+	
+	
 	@Override
 	public Integer countTermsInPeriod(Date dateFrom, Date dateTo) {
 		// TODO Auto-generated method stub
@@ -130,12 +135,19 @@ public class TermsBusiness implements TermsBusinessInterface{
 			dateFrom = new Date(0);
 		if (dateTo==null)
 			dateTo= new Date();
-		
-		List<Term> listTerm = em.createQuery("Select t from Term t where t.pkTerm.idResource = :id"
-		/*		 + "t.dateStart BETWEEN '"+ new SimpleDateFormat("yyyy-MM-dd").format(dateFrom) +"' and '"+new SimpleDateFormat("yyyy-MM-dd").format(dateTo).toString()+"' "
-				+ " and " + 
-				"t.dateEnd BETWEEN '"+ new SimpleDateFormat("yyyy-MM-dd").format(dateFrom) +"' and '"+new SimpleDateFormat("yyyy-MM-dd").format(dateTo).toString()+"' "
-			*/	).setParameter("id", id).getResultList();
+		System.out.println("Select t from Term t where t.resources.idUser = :id"
+				 + " and t.dateStart BETWEEN '"+ new SimpleDateFormat("yyyy-MM-dd").format(dateFrom) +"' and '"+new SimpleDateFormat("yyyy-MM-dd").format(dateTo)+"' "
+				+ " or " + 
+				"t.dateEnd BETWEEN '"+ new SimpleDateFormat("yyyy-MM-dd").format(dateFrom) +"' and '"+new SimpleDateFormat("yyyy-MM-dd").format(dateTo)+"' "
+				);
+		List<Term> listTerm = em.createQuery("Select distinct t from Term t where t.resources.idUser = :id"
+				 + " and ( t.dateStart BETWEEN '"+ new SimpleDateFormat("yyyy-MM-dd").format(dateFrom) +"' and '"+new SimpleDateFormat("yyyy-MM-dd").format(dateTo)+"' "
+				+ " or " + 
+				"t.dateEnd BETWEEN '"+ new SimpleDateFormat("yyyy-MM-dd").format(dateFrom) +"' and '"+new SimpleDateFormat("yyyy-MM-dd").format(dateTo)+"' "
+				+ " or '" +new SimpleDateFormat("yyyy-MM-dd").format(dateFrom) +"' BETWEEN t.dateStart and t.dateEnd"+
+				 " and '" + 
+				 new SimpleDateFormat("yyyy-MM-dd").format(dateFrom) +"' BETWEEN t.dateEnd and t.dateStart )"
+				).setParameter("id", id).getResultList();
 		return listTerm;
 	}
 
@@ -165,4 +177,22 @@ public class TermsBusiness implements TermsBusinessInterface{
 	        return Stream.iterate(start, date -> date.plusDays(1))
 	                .limit(days+1);
 	    }
+
+
+
+		@Override
+		public List<Term> getTermsByResource(Integer idResource) {
+			// TODO Auto-generated method stub
+			 
+			return null;
+		}
+
+
+
+		@Override
+		public List<Object[]> getProfitByClients() {
+			// TODO Auto-generated method stub
+			return em.createQuery("SELECT SUM(t.dailyFee)*SUM((t.dateEnd-t.dateStart)/(1000*3600*24)) , c.clientName FROM Term t Right JOIN t.projects p Right JOIN p.client c GROUP BY c ").getResultList();
+			
+		}
 }
