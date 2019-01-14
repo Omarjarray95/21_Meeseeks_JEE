@@ -63,7 +63,6 @@ public class DayOffServie implements DayOffServieRemote, DayOffServieLocal {
 		DayOff dayOff=em.find(DayOff.class, d.getIdLeave());
 		dayOff=d;
 		em.merge(dayOff);
-		
 	}
 
 	@Override

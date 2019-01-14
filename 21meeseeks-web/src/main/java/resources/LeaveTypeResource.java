@@ -22,7 +22,7 @@ import interfaces.RequestServiceLocal;
 @RequestScoped
 public class LeaveTypeResource 
 {
-	@EJB(beanName = "LeaveTypeService")
+	@EJB
 	LeaveTypeServiceLocal LTSL;
 	
 	@POST
@@ -53,7 +53,7 @@ public class LeaveTypeResource
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response UpdateLeaveType(LeaveType LT) 
 	{
-		if (LTSL.updateLeaveType(LT))
+		if (LTSL.UpdateLeaveType(LT))
 		{
 			return Response.status(Status.OK).entity(LT).build();
 		}

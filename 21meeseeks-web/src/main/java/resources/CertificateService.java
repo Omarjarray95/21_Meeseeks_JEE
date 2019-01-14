@@ -31,7 +31,6 @@ public class CertificateService {
 	public Response addCertificate(Certificate c) {
 		if (c != null) {
 			int i = cs.addCertificate(c);
-
 		}
 		return Response.status(Status.CREATED).entity("ok").build();
 	}

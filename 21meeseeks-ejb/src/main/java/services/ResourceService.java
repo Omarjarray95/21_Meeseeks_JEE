@@ -40,8 +40,10 @@ public class ResourceService implements ResourceServiceRemote, ResourceServiceLo
 	@Override
 	public int ajoutRessource(Resource r) {
 		
+		
 		r.setResume(em.find(Resume.class, r.getResume().getIdResume()));
 		r.setSeniority(em.find(Seniority.class, r.getSeniority().getIdSeniority()));
+		
 		//em.merge(r);
 		/*
 		Set<Note> noteliste = r.getNotes();
@@ -77,27 +79,31 @@ public class ResourceService implements ResourceServiceRemote, ResourceServiceLo
 	public Boolean deleteResource(int id) {
 		Resource r=em.find(Resource.class, id);
 		try{
-		if(r != null){
-			Query query = em.createQuery("DELETE Level l WHERE l.resources.idUser=:resources");
-			query.setParameter("resources", r.getIdUser()).executeUpdate();
-			
-			Resume query2 = (Resume)em.createQuery("SELECT r FROM Resume r , Resource rs WHERE rs.idUser = :resourceId and r.idResume = rs.resume").setParameter("resourceId", r.getIdUser()).getSingleResult();
-			Query query3 = em.createQuery("UPDATE Resource r SET r.resume = null WHERE r.idUser = :id");
-			query3.setParameter("id", r.getIdUser()).executeUpdate();
-			Query query4 = em.createQuery("UPDATE Resource s SET s.seniority = null WHERE s.idUser = :id");
-			query4.setParameter("id", r.getIdUser()).executeUpdate();
-			r.setSeniority(null);
-			
-			em.remove(query2);
-			//System.out.println(level);
-			//em.remove(level);
-			em.remove(r);
-			
-			return true ;
-		}
+			if(r != null){
+				Query query = em.createQuery("DELETE Level l WHERE l.resources.idUser=:resources");
+				query.setParameter("resources", r.getIdUser()).executeUpdate();
+				System.out.println("UPDATING RESOURCE WITH BULLSHITS");
+				Query query3 = em.createQuery("UPDATE Resource r SET r.resume = null WHERE r.idUser = :id");
+				query3.setParameter("id", r.getIdUser()).executeUpdate();
+				Query query4 = em.createQuery("UPDATE Resource s SET s.seniority = null WHERE s.idUser = :id");
+				query4.setParameter("id", r.getIdUser()).executeUpdate();
+				System.out.println("TERMS DELETING ...");
+				Query query5 = em.createQuery("DELETE FROM Term WHERE idResource = :id");
+				query5.setParameter("id", r.getIdUser()).executeUpdate();
+				System.out.println("TERMS DELETED ");
+				r.setSeniority(null);
+				System.out.println("Remove Resume");
+				//System.out.println(level);
+				//em.remove(level);
+				em.remove(r);
+				System.out.println("Remove Resource");
+				
+				return true ;
+			}
 		}catch(NoResultException e){
-			em.remove(r);
-			return true ;
+			
+			System.out.println(e.getMessage());
+			return false ;
 		}
 		
 		return false;

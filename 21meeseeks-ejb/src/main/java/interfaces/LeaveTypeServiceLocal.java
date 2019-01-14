@@ -1,13 +1,18 @@
 package interfaces;
 
+import java.util.List;
+
+import javax.ejb.Local;
+
 import entities.LeaveType;
 
+@Local
 public interface LeaveTypeServiceLocal {
 
 	int AddLeaveType(LeaveType lT);
-	Boolean updateLeaveType(LeaveType lT);
+	boolean UpdateLeaveType(LeaveType lT);
 
-	String ShowAllLeaveTypes();
+	List<LeaveType> ShowAllLeaveTypes();
 
 	boolean DeleteLeaveType(int idLeaveType);
 
